@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteVentas" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="81da73fb-000e-49cc-acd0-2028b20fc8e9">
+	<parameter name="ID_USUARIO" class="java.lang.Integer"/>
+	<parameter name="FILTRO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT e.nombre AS evento, e.fecha AS fecha_evento, e.precio, b.codigo_unico, b.estado, b.fecha_venta, u.nombre AS vendedor
+FROM boleta b INNER JOIN evento e ON e.id_evento = b.id_evento
+INNER JOIN usuario u ON u.id_usuario = b.id_usuario
+WHERE ($P{ID_USUARIO} = 0 OR b.id_usuario = $P{ID_USUARIO})
+ORDER BY e.fecha, e.nombre, b.fecha_venta]]>
+	</queryString>
+	<field name="evento" class="java.lang.String"/>
+	<field name="fecha_evento" class="java.sql.Date"/>
+	<field name="precio" class="java.math.BigDecimal"/>
+	<field name="codigo_unico" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="fecha_venta" class="java.sql.Timestamp"/>
+	<field name="vendedor" class="java.lang.String"/>
+	<variable name="vendidasEvento" class="java.lang.Integer" resetType="Group" resetGroup="grupoEvento" calculation="Sum">
+		<variableExpression><![CDATA[$F{estado}.equals("ANULADA") ? 0 : 1]]></variableExpression>
+	</variable>
+	<variable name="totalEvento" class="java.math.BigDecimal" resetType="Group" resetGroup="grupoEvento" calculation="Sum">
+		<variableExpression><![CDATA[$F{estado}.equals("ANULADA") ? java.math.BigDecimal.ZERO : $F{precio}]]></variableExpression>
+	</variable>
+	<variable name="vendidasTotal" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{estado}.equals("ANULADA") ? 0 : 1]]></variableExpression>
+	</variable>
+	<variable name="totalGeneral" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{estado}.equals("ANULADA") ? java.math.BigDecimal.ZERO : $F{precio}]]></variableExpression>
+	</variable>
+	<group name="grupoEvento">
+		<groupExpression><![CDATA[$F{evento} + $F{fecha_evento}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="4" width="555" height="22" backcolor="#DCE6F1" uuid="35331715-d2df-4207-b9eb-44903e14fad4"/>
+				<graphicElement><pen lineWidth="0.0"/></graphicElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="4" width="360" height="22" uuid="ec6fd7f8-6907-46d8-9708-4f7c530065a7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Evento: " + $F{evento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="4" width="185" height="22" uuid="11199db8-f443-4242-8e06-0821f38f7d63"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{fecha_evento})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="30" width="110" height="18" uuid="8869e70c-ef62-44c4-895d-90a05603b0ac"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="30" width="80" height="18" uuid="de33c5f8-3716-4981-86e8-128b5236d401"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="30" width="130" height="18" uuid="752c687e-739e-43fc-8183-c4b72ea4188b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de venta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="30" width="80" height="18" uuid="4fcf4a69-7bb7-429b-9e25-612b6a2effd4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="30" width="130" height="18" uuid="41c78d9b-2428-4fa3-b923-3e42818b3124"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vendedor]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="48" width="555" height="1" uuid="a209e061-ddd5-401b-91cb-7b7594f71b36"/>
+			</line>
+
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30">
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="4" width="300" height="20" uuid="05bf9f9f-a801-4f1b-ac55-b6d97c73e253"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Boletas vendidas: " + $V{vendidasEvento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="4" width="250" height="20" uuid="96147a8f-fa93-40cd-80c4-5f9406e7199a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total del evento: $ " + new java.text.DecimalFormat("#,##0.00").format($V{totalEvento})]]></textFieldExpression>
+			</textField>
+
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="60">
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="30" uuid="59cc3d9b-7456-4cf6-8dfa-42c4097505de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE VENTAS DE BOLETOS]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="35" width="555" height="18" uuid="d20df3fa-e763-431b-be75-54b6ccfe3ed8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ventas de: " + $P{FILTRO}]]></textFieldExpression>
+			</textField>
+
+		</band>
+	</title>
+	<detail>
+		<band height="20">
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="0" width="110" height="18" uuid="12832ef4-f0e5-487a-8a24-54953ef40ad9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo_unico}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="0" width="80" height="18" uuid="5a401cac-f299-4791-a8c9-032328573b1f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="205" y="0" width="130" height="18" uuid="07d7923c-794e-43f7-9deb-b9eaee3465e4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{fecha_venta})]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="475" y="0" width="80" height="18" uuid="b616e0c0-1151-4369-b690-75ceb1a0e67e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+
+					<textField isBlankWhenNull="true">
+				<reportElement x="340" y="0" width="130" height="18" uuid="3f665a85-06c5-49b0-b9e3-297dc0eacb7e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vendedor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="22">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="2" width="555" height="18" uuid="3f85d350-5a23-48c9-b89a-097105c57c39"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="40">
+			<line>
+				<reportElement x="0" y="4" width="555" height="1" uuid="42ff7fdc-6943-42fd-bdf9-3141ab28f22b"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="10" width="300" height="22" uuid="bc8f0206-e0fa-4660-97d2-410f3f637151"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL BOLETAS VENDIDAS: " + $V{vendidasTotal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="10" width="250" height="22" uuid="e4e22db3-f1ff-40bc-b3bf-8d6a63cf400d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL RECAUDADO: $ " + new java.text.DecimalFormat("#,##0.00").format($V{totalGeneral})]]></textFieldExpression>
+			</textField>
+
+		</band>
+	</summary>
+</jasperReport>
