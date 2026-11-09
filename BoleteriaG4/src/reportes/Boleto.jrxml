@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Boleto" language="java" pageWidth="360" pageHeight="230" columnWidth="340" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="7fa9f6fe-0776-4ce7-9b34-3506d465a188">
+	<parameter name="EVENTO" class="java.lang.String"/>
+	<parameter name="FECHA" class="java.lang.String"/>
+	<parameter name="PRECIO" class="java.lang.String"/>
+	<parameter name="CODIGO" class="java.lang.String"/>
+	<parameter name="BARRAS" class="java.awt.Image"/>
+	<title>
+		<band height="210">
+			<rectangle>
+				<reportElement x="0" y="0" width="340" height="208" uuid="89da2cfe-20cc-49ec-85fa-8e70ef6c601a"/>
+				<graphicElement><pen lineWidth="1.5"/></graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="340" height="28" backcolor="#1F3A5F" uuid="37ef68b3-ddcd-4936-aeda-47b346309d42"/>
+				<graphicElement><pen lineWidth="0.0"/></graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="340" height="28" forecolor="#FFFFFF" uuid="d5aaa02e-1fc6-47bc-84a8-6795303cf8e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BOLETO DE ENTRADA]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="36" width="320" height="30" uuid="2416b55a-808a-4649-9b38-c845bf0fb761"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EVENTO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="68" width="320" height="20" uuid="04f35f46-9f4f-44df-ae8e-1c6e7dbec810"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha: " + $P{FECHA} + "     Precio: " + $P{PRECIO}]]></textFieldExpression>
+			</textField>
+
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="20" y="96" width="300" height="100" uuid="5c69a6ff-6c1b-4e02-ac4c-3d9cca69e715"/>
+				<imageExpression><![CDATA[$P{BARRAS}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+</jasperReport>
