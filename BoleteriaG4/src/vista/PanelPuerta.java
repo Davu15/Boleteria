@@ -4,6 +4,8 @@ import controlador.ControladorPuerta;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import modelo.ResultadoAcceso;
 import util.Sonido;
 
@@ -17,10 +19,26 @@ public class PanelPuerta extends javax.swing.JPanel {
     // Después de unos segundos la pantalla vuelve a "ESPERANDO LECTURA"
     private Timer temporizador;
 
+    // El lector no envía Enter: si pasan 300 ms sin recibir caracteres, se valida solo
+    private Timer temporizadorLector;
+
     public PanelPuerta() {
         initComponents();
         temporizador = new Timer(4000, e -> ponerEnEspera());
         temporizador.setRepeats(false);
+
+        // Enter automático: cuando el lector deja de escribir, se valida el código
+        temporizadorLector = new Timer(300, e -> txtCodigoActionPerformed(null));
+        temporizadorLector.setRepeats(false);
+        txtCodigo.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { temporizadorLector.restart(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { }
+            @Override
+            public void changedUpdate(DocumentEvent e) { }
+        });
+
         ponerEnEspera();
     }
 
@@ -110,7 +128,8 @@ public class PanelPuerta extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
-        // El lector envía el código y luego "Enter": este método se ejecuta solo
+        // Se ejecuta con Enter o automáticamente por el temporizador del lector
+        temporizadorLector.stop();
         String codigo = txtCodigo.getText().trim();
         txtCodigo.setText("");          // se limpia para la siguiente lectura
         if (codigo.isEmpty()) {
