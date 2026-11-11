@@ -12,7 +12,8 @@ public class ControladorPuerta {
     private BoletaDAO boletaDAO = new BoletaDAO();
 
     public ResultadoAcceso validar(String codigo) throws SQLException {
-        codigo = codigo.trim().toUpperCase();
+        // Quita cualquier carácter que no sea letra o número (el lector puede meter ' o ´ según el teclado)
+        codigo = codigo.replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
 
         // Un solo UPDATE decide si entra o no (evita que dos puertas lo acepten a la vez)
         int filas = boletaDAO.marcarUsada(codigo, Sesion.idActual());
