@@ -65,6 +65,6 @@ public class ControladorTaquilla {
     /** Código tipo E3-482910 (E + número de evento + 6 dígitos al azar). Solo usa caracteres de Code 39. */
     private String generarCodigo(int idEvento) {
         int numero = 100000 + azar.nextInt(900000);
-        return "E" + idEvento + "-" + numero;
+        return "E" + idEvento + numero;
     }
 }
