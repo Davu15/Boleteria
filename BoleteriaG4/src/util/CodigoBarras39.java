@@ -48,6 +48,11 @@ public class CodigoBarras39 {
 
     /** Crea la imagen del código de barras para el texto indicado. */
     public static BufferedImage crear(String texto) {
+        
+        // Elimina cualquier carácter que no sea letra (a-z, A-Z) o número (0-9).
+        // Esto quita guiones, comillas simples, espacios
+        texto = texto.replaceAll("[^a-zA-Z0-9]", "");
+        
         String completo = "*" + texto.toUpperCase() + "*";   // se agregan inicio y fin
 
         // 1) Calcular el ancho total de la imagen
